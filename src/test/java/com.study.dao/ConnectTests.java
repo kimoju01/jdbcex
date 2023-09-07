@@ -1,5 +1,7 @@
 package com.study.dao;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +41,26 @@ public class ConnectTests {
         // 데이터베이스와의 연결을 종료한다. JDBC 프로그램은 데이터베이스와 연결을 잠깐씩 맺고 종료하는 방식으로 처리된다.
         // 작업이 완료되면 데이터베이스와의 연결을 종료해주어야만 한다.
         connection.close();
+    }
+
+    @Test
+    public void testHikariCP() throws Exception {
+
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mariadb://localhost:3306/webdb");
+        config.setUsername("webuser");
+        config.setPassword("webuser");
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+        HikariDataSource ds = new HikariDataSource(config);
+        Connection connection = ds.getConnection();
+
+        System.out.println(connection);
+
+        connection.close();
+
     }
 
 }
